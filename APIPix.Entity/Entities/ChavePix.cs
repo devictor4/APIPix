@@ -8,6 +8,6 @@ namespace APIPix.Entity.Entities
         [Key]
         public long id { get; set; }
         public TipoChavePix tipoChavePix { get; set; }
-        public string DescChavePix { get; set; }
+        public string descChavePix { get; set; }
     }
 }

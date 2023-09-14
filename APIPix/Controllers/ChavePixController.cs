@@ -18,7 +18,7 @@ namespace APIPix.Controllers
         {
             var result = _chavePixBusiness.BuscarChavePix(id);
 
-            return result;
+            return null;
         }
     }
 }
