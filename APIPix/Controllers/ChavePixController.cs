@@ -1,10 +1,11 @@
 ﻿using APIPix.Business.ChavePixBusiness;
+using APIPix.Entity.Filters;
 using Microsoft.AspNetCore.Mvc;
 
 namespace APIPix.Controllers
 {
     [ApiController]
-    [Route("api/v1/{controller}")]
+    [Route("api/v1/[controller]/[action]")]
     public class ChavePixController : ControllerBase
     {
         private readonly ChavePixBusiness _chavePixBusiness;
@@ -14,11 +15,17 @@ namespace APIPix.Controllers
             _chavePixBusiness = chavePixBusiness;
         }
 
-        public IActionResult BuscarChavePix(long id)
+        [HttpPost]
+        public IActionResult CadastrarChavePix(CadastrarChavePixFilter cadastrarChavePixFilter)
         {
-            var result = _chavePixBusiness.BuscarChavePix(id);
-
-            return null;
+            try
+            {
+                return Created("", _chavePixBusiness.CadastrarChavePix(cadastrarChavePixFilter));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
