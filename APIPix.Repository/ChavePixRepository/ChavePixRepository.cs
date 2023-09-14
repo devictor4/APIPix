@@ -1,5 +1,4 @@
-﻿using APIPix.Entity.Entities;
-
+﻿
 namespace APIPix.Repository.ChavePixRepository
 {
     public class ChavePixRepository
