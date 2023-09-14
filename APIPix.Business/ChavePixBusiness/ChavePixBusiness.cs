@@ -1,7 +1,4 @@
-﻿
-using APIPix.Entity.Entities;
-
-namespace APIPix.Business.ChavePixBusiness
+﻿namespace APIPix.Business.ChavePixBusiness
 {
     public class ChavePixBusiness
     {
