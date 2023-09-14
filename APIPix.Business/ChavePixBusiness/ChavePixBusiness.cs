@@ -1,4 +1,5 @@
-﻿namespace APIPix.Business.ChavePixBusiness
+﻿using APIPix.Repository.Model;
+namespace APIPix.Business.ChavePixBusiness
 {
     public class ChavePixBusiness
     {

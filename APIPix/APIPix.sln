@@ -14,9 +14,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPix.Business", "..\APIPi
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPix.Repository", "..\APIPix.Repository\APIPix.Repository.csproj", "{5AFDA465-0E63-4586-B18A-DDE0B82BC883}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9900C32F-79E5-474F-84F9-C9385D99E446} = {9900C32F-79E5-474F-84F9-C9385D99E446}
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPix.IoC", "..\APIPix.IoC\APIPix.IoC.csproj", "{EB33E63C-8B52-4573-B03B-26DA682AF224}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -24,6 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPix.IoC", "..\APIPix.IoC
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIPix.Entity", "..\APIPix.Entity\APIPix.Entity.csproj", "{9900C32F-79E5-474F-84F9-C9385D99E446}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5AFDA465-0E63-4586-B18A-DDE0B82BC883} = {5AFDA465-0E63-4586-B18A-DDE0B82BC883}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

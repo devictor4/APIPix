@@ -1,4 +1,4 @@
-﻿using APIPix.Entity.Entities;
+﻿using APIPix.Repository.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace APIPix.Repository.Context

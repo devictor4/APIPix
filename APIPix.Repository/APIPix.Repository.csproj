@@ -10,8 +10,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.22" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\APIPix.Entity\APIPix.Entity.csproj" />
-  </ItemGroup>
-
 </Project>
