@@ -22,6 +22,7 @@ namespace APIPix.Entity.DTO.UsuarioDTO
             Id = item.id;
             Nome = item.nome;
             CpfCnpj = item.cpfCnpj;
+            DataNascimento = item.dataNascimento;
             Email = item.email;
             Telefone = item.telefone;
             StExclusao = item.stExclusao;
