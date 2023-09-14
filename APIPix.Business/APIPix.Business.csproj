@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\APIPix.Entity\APIPix.Entity.csproj" />
+    <ProjectReference Include="..\APIPix.Repository\APIPix.Repository.csproj" />
   </ItemGroup>
 
 </Project>

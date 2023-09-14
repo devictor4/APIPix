@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\APIPix.Business\APIPix.Business.csproj" />
+    <ProjectReference Include="..\APIPix.IoC\APIPix.IoC.csproj" />
   </ItemGroup>
 
 </Project>
