@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace APIPix.Entity.Filters
 {
-    public class CadastrarChavePixFilter
+    public class SalvarChavePixFilter
     {
         public TipoChavePix tipoChavePix { get; set; }
         public string descChavePix { get; set; }

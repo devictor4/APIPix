@@ -16,11 +16,11 @@ namespace APIPix.Controllers
         }
 
         [HttpPost]
-        public IActionResult CadastrarChavePix(CadastrarChavePixFilter cadastrarChavePixFilter)
+        public IActionResult SalvarChavePix(SalvarChavePixFilter salvarChavePixFilter)
         {
             try
             {
-                return Created("", _chavePixBusiness.CadastrarChavePix(cadastrarChavePixFilter));
+                return Created("", _chavePixBusiness.SalvarChavePix(salvarChavePixFilter));
             }
             catch (Exception ex)
             {

@@ -1,5 +1,6 @@
 ﻿using APIPix.Entity.DTO.UsuarioDTO;
 using APIPix.Entity.Filters;
+using APIPix.Entity.Util;
 using APIPix.Repository.Context;
 using APIPix.Repository.Model;
 
@@ -17,6 +18,7 @@ namespace APIPix.Business.UsuarioBusiness
         public UsuarioDTO BuscarUsuarioByCpfCnpj(string cpfCnpj)
         {
             if (string.IsNullOrEmpty(cpfCnpj)) throw new Exception("O Campo CPF ou CNPJ não pode ser vazio.");
+            if (!Utilities.IsCpf(cpfCnpj) || !Utilities.IsCnpj(cpfCnpj)) throw new Exception("É necessário informar um CPF ou CNPJ válido.");
 
             var result = _context.usuario.Where(x => x.cpfCnpj == cpfCnpj).FirstOrDefault();
 
@@ -89,6 +91,7 @@ namespace APIPix.Business.UsuarioBusiness
             if (string.IsNullOrEmpty(salvarUsuarioFilter.Email)) throw new Exception("O campo Email deve ser preenchido.");
             if (!salvarUsuarioFilter.Telefone.HasValue) throw new Exception("O campo Telefone deve ser preenchido.");
             if (string.IsNullOrEmpty(salvarUsuarioFilter.CpfCnpj)) throw new Exception("O campo CPF ou CNPJ deve ser preenchido.");
+            if (!Utilities.IsCpf(salvarUsuarioFilter.CpfCnpj) || !Utilities.IsCnpj(salvarUsuarioFilter.CpfCnpj)) throw new Exception("É necessário informar um CPF ou CNPJ válido.");
             if (salvarUsuarioFilter.CpfCnpj.Length != 11 && salvarUsuarioFilter.CpfCnpj.Length != 14) throw new Exception("O campo CPF ou CNPJ deve ser preenchido de forma correta.");
         }
     }
