@@ -1,7 +1,6 @@
-﻿using APIPix.Repository.Model;
-namespace APIPix.Entity.Filters
+﻿namespace APIPix.Entity.Filters
 {
-    public class CadastrarUsuarioFilter
+    public class SalvarUsuarioFilter
     {
         public string Nome { get; set; }
         public string CpfCnpj { get; set; }

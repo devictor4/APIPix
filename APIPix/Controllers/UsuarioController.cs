@@ -28,25 +28,11 @@ namespace APIPix.Controllers
         }
 
         [HttpPost]
-        public IActionResult CadastrarUsuario(CadastrarUsuarioFilter usuarioFilter)
+        public IActionResult SalvarUsuario(SalvarUsuarioFilter usuarioFilter)
         {
             try
             {
-                return Created("", _usuarioBusiness.CadastrarUsuario(usuarioFilter));
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
-        [HttpPut]
-        public IActionResult AlterarUsuario(CadastrarUsuarioFilter usuarioFilter)
-        {
-            try
-            {
-                _usuarioBusiness.AlterarUsuario(usuarioFilter);
-                return Ok("Usuário alterado com sucesso!");
+                return Created("", _usuarioBusiness.SalvarUsuario(usuarioFilter));
             }
             catch (Exception ex)
             {

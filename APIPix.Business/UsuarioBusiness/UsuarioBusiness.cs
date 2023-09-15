@@ -28,37 +28,22 @@ namespace APIPix.Business.UsuarioBusiness
             return usuarioDTO;
         }
 
-        public Usuario CadastrarUsuario(CadastrarUsuarioFilter usuarioFilter)
+        public Usuario SalvarUsuario(SalvarUsuarioFilter salvarUsuarioFilter)
         {
             Usuario usuario = new Usuario();
-            ValidaCampos(usuarioFilter);
+            ValidaCampos(salvarUsuarioFilter);
 
-            var result = _context.usuario.Where(x => x.cpfCnpj == usuarioFilter.CpfCnpj).FirstOrDefault();
-            if (result != null && !result.stExclusao) throw new Exception("Já existe um usuário cadastrado com esse CPF ou CNPJ");
+            var result = _context.usuario.Where(x => x.cpfCnpj == salvarUsuarioFilter.CpfCnpj).FirstOrDefault();
 
-            if(result != null && result.stExclusao)
-            {
-                result.nome = usuarioFilter.Nome;
-                result.dataNascimento = usuarioFilter.DataNascimento.Value;
-                result.email = usuarioFilter.Email;
-                result.telefone = usuarioFilter.Telefone.Value;
-                result.dataAlteracao = DateTime.Now;
-                result.stExclusao = false;
-
-                _context.usuario.Update(result);
-                _context.SaveChanges();
-
-                return result;
-            }
-            else
+            if(result == null)
             {
                 usuario = new()
                 {
-                    nome = usuarioFilter.Nome,
-                    cpfCnpj = usuarioFilter.CpfCnpj,
-                    dataNascimento = usuarioFilter.DataNascimento.Value,
-                    email = usuarioFilter.Email,
-                    telefone = usuarioFilter.Telefone.Value,
+                    nome = salvarUsuarioFilter.Nome,
+                    cpfCnpj = salvarUsuarioFilter.CpfCnpj,
+                    dataNascimento = salvarUsuarioFilter.DataNascimento.Value,
+                    email = salvarUsuarioFilter.Email,
+                    telefone = salvarUsuarioFilter.Telefone.Value,
                     dataInclusao = DateTime.Now,
                     stExclusao = false
                 };
@@ -68,24 +53,20 @@ namespace APIPix.Business.UsuarioBusiness
 
                 return usuario;
             }
-        }
+            else
+            {
+                result.nome = salvarUsuarioFilter.Nome;
+                result.dataNascimento = salvarUsuarioFilter.DataNascimento.HasValue ? salvarUsuarioFilter.DataNascimento.Value : result.dataNascimento;
+                result.email = salvarUsuarioFilter.Email;
+                result.telefone = salvarUsuarioFilter.Telefone.HasValue ? salvarUsuarioFilter.Telefone.Value : result.telefone;
+                result.dataAlteracao = DateTime.Now;
+                result.stExclusao = false;
 
-        public void AlterarUsuario(CadastrarUsuarioFilter usuarioFilter)
-        {
-            ValidaCampos(usuarioFilter);
-            var result = _context.usuario.Where(x => x.cpfCnpj == usuarioFilter.CpfCnpj).FirstOrDefault();
-            if (result == null) throw new Exception("Usuário não encontrado.");
-            if (result.stExclusao) throw new Exception("O usuário informado encontra-se desligado.");
+                _context.usuario.Update(result);
+                _context.SaveChanges();
 
-            result.nome = usuarioFilter.Nome;
-            result.cpfCnpj = usuarioFilter.CpfCnpj;
-            result.dataNascimento = usuarioFilter.DataNascimento.Value;
-            result.email = usuarioFilter.Email;
-            result.telefone = usuarioFilter.Telefone.Value;
-            result.dataAlteracao = DateTime.Now;
-
-            _context.usuario.Update(result);
-            _context.SaveChanges();
+                return result;
+            }
         }
 
         public void ExcluirUsuarioByCpfCnpj(string cpfCnpj)
@@ -101,14 +82,14 @@ namespace APIPix.Business.UsuarioBusiness
             _context.SaveChanges();
         }
 
-        private void ValidaCampos(CadastrarUsuarioFilter usuarioFilter)
+        private void ValidaCampos(SalvarUsuarioFilter salvarUsuarioFilter)
         {
-            if (string.IsNullOrEmpty(usuarioFilter.Nome)) throw new Exception("O campo Nome deve ser preenchido.");
-            if (!usuarioFilter.DataNascimento.HasValue) throw new Exception("O campo Data de Nascimento deve ser preenchido.");
-            if (string.IsNullOrEmpty(usuarioFilter.Email)) throw new Exception("O campo Email deve ser preenchido.");
-            if (!usuarioFilter.Telefone.HasValue) throw new Exception("O campo Telefone deve ser preenchido.");
-            if (string.IsNullOrEmpty(usuarioFilter.CpfCnpj)) throw new Exception("O campo CPF ou CNPJ deve ser preenchido.");
-            if (usuarioFilter.CpfCnpj.Length != 11 && usuarioFilter.CpfCnpj.Length != 14) throw new Exception("O campo CPF ou CNPJ deve ser preenchido de forma correta.");
+            if (string.IsNullOrEmpty(salvarUsuarioFilter.Nome)) throw new Exception("O campo Nome deve ser preenchido.");
+            if (!salvarUsuarioFilter.DataNascimento.HasValue) throw new Exception("O campo Data de Nascimento deve ser preenchido.");
+            if (string.IsNullOrEmpty(salvarUsuarioFilter.Email)) throw new Exception("O campo Email deve ser preenchido.");
+            if (!salvarUsuarioFilter.Telefone.HasValue) throw new Exception("O campo Telefone deve ser preenchido.");
+            if (string.IsNullOrEmpty(salvarUsuarioFilter.CpfCnpj)) throw new Exception("O campo CPF ou CNPJ deve ser preenchido.");
+            if (salvarUsuarioFilter.CpfCnpj.Length != 11 && salvarUsuarioFilter.CpfCnpj.Length != 14) throw new Exception("O campo CPF ou CNPJ deve ser preenchido de forma correta.");
         }
     }
 }
