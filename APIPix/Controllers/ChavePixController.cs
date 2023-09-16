@@ -1,6 +1,7 @@
 ﻿using APIPix.Business.ChavePixBusiness;
 using APIPix.Entity.Filters;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace APIPix.Controllers
 {
@@ -15,6 +16,19 @@ namespace APIPix.Controllers
             _chavePixBusiness = chavePixBusiness;
         }
 
+        [HttpGet]
+        public IActionResult ListarChavePixByUsuario(string cpfCnpj)
+        {
+            try
+            {
+                return Ok(_chavePixBusiness.ListarChavePixByUsuario(cpfCnpj));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPost]
         public IActionResult SalvarChavePix(SalvarChavePixFilter salvarChavePixFilter)
         {
@@ -27,5 +41,21 @@ namespace APIPix.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete]
+        public IActionResult ExcluirChavePixByCpfCnpj(string cpfCnpj, int tipoChavePix)
+        {
+            try
+            {
+                _chavePixBusiness.ExcluirChavePixByCpfCnpj(cpfCnpj, tipoChavePix);
+                return Ok("Chave Pix excluída com sucesso!");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
     }
 }

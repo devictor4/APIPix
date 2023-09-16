@@ -15,11 +15,5 @@ namespace APIPix.Repository.Model
         public long idChavePix { get; set; }
         [Column("dataInclusao")]
         public DateTime dataInclusao { get; set; }
-        [Column("dataAlteracao")]
-        public DateTime? dataAlteracao { get; set; }
-        [Column("dataExclusao")]
-        public DateTime? dataExclusao { get; set; }
-        [Column("stExclusao")]
-        public bool stExclusao { get; set; }
     }
 }

@@ -1,8 +1,11 @@
-﻿using APIPix.Entity.Enums;
+﻿using APIPix.Entity.DTO.ChavePixDTO;
+using APIPix.Entity.Enums;
 using APIPix.Entity.Filters;
 using APIPix.Entity.Util;
 using APIPix.Repository.Context;
 using APIPix.Repository.Model;
+using System.Linq;
+using static APIPix.Entity.Util.Utilities;
 
 namespace APIPix.Business.ChavePixBusiness
 {
@@ -15,10 +18,32 @@ namespace APIPix.Business.ChavePixBusiness
             _context = aPIPixContext;
         }
 
-        public UsuarioChavePix ListarPixUsuario(string cpfCnpj)
+        public List<ChavePixByUsuarioDTO> ListarChavePixByUsuario(string cpfCnpj)
         {
+            if (string.IsNullOrEmpty(cpfCnpj)) throw new Exception("O Campo CPF ou CNPJ não pode ser vazio.");
+
             var usuario = _context.usuario.Where(x => x.cpfCnpj == cpfCnpj).FirstOrDefault();
-            return null;
+
+            if (usuario == null) throw new Exception("Usuário não encontrado.");
+            if (usuario.stExclusao) throw new Exception("O usuário informado encontra-se desligado.");
+
+            var usuarioChavesPix = _context.usuarioChavePix.Where(x => x.idUsuario == usuario.id).ToList();
+
+            List<ChavePixByUsuarioDTO> listChavesPix = new();
+
+            if (usuarioChavesPix.Any())
+            {
+                usuarioChavesPix.ForEach(x =>
+                {
+                    var chavesPix = _context.chavePix.Where(y => y.id == x.idChavePix).FirstOrDefault();
+
+                    ChavePixByUsuarioDTO chavePixByUsuario = new(chavesPix);
+
+                    if (chavesPix != null) listChavesPix.Add(chavePixByUsuario);
+                });
+            }
+
+            return listChavesPix;
         }
 
         public ChavePix SalvarChavePix(SalvarChavePixFilter salvarChavePixFilter)
@@ -30,11 +55,16 @@ namespace APIPix.Business.ChavePixBusiness
             if (usuario == null) throw new Exception("Usuário não encontrado.");
             if (usuario.stExclusao) throw new Exception("O usuário informado encontra-se desligado.");
 
+            if (salvarChavePixFilter.tipoChavePix.GetHashCode() == 1 && usuario.cpfCnpj.Length == 11) salvarChavePixFilter.descChavePix = usuario.cpfCnpj;
             if (salvarChavePixFilter.tipoChavePix.GetHashCode() == 4) salvarChavePixFilter.descChavePix = Utilities.OnlyNumbers(salvarChavePixFilter.descChavePix);
 
             ValidaChavePix(salvarChavePixFilter);
 
-            //Crítica Tipo PIX já cadastrado para Usuário a partir do Endpoint ListarPixUsuario
+            var chavesPixUsuario = ListarChavePixByUsuario(usuario.cpfCnpj);
+            var possuiTipoChavePix = chavesPixUsuario.Where(x => x.tipoChavePix.Contains(DescriptionEnum.GetEnumDescription((TipoChavePix)salvarChavePixFilter.tipoChavePix))).FirstOrDefault();
+
+            if (possuiTipoChavePix != null) throw new Exception($"O usuário já possui uma chave Pix cadastrada para o tipo escolhido. Tipo: {possuiTipoChavePix.tipoChavePix}");
+
 
             ChavePix chavePix = new() {
                 tipoChavePix = salvarChavePixFilter.tipoChavePix.GetHashCode(),
@@ -48,14 +78,41 @@ namespace APIPix.Business.ChavePixBusiness
             {
                 idUsuario = usuario.id,
                 idChavePix = chavePix.id,
-                dataInclusao = DateTime.Now,
-                stExclusao = false
+                dataInclusao = DateTime.Now
             };
 
             _context.usuarioChavePix.Add(usuarioChavePix);
             _context.SaveChanges();
 
             return chavePix;
+        }
+
+        public void ExcluirChavePixByCpfCnpj(string cpfCnpj, int tipoChavePix)
+        {
+            if (string.IsNullOrEmpty(cpfCnpj)) throw new Exception("O Campo CPF ou CNPJ não pode ser vazio.");
+            if (tipoChavePix == 0) throw new Exception("É necessário escolher um tipo de chave para exclusão.");
+
+            var usuario = _context.usuario.Where(x => x.cpfCnpj == cpfCnpj).FirstOrDefault();
+
+            if (usuario == null) throw new Exception("Usuário não encontrado.");
+            if (usuario.stExclusao) throw new Exception("O usuário informado encontra-se desligado.");
+
+            var usuarioChavesPix = _context.usuarioChavePix.Where(x => x.idUsuario == usuario.id).ToList();
+
+            if (!usuarioChavesPix.Any()) throw new Exception("Não foi encontrada uma chave Pix cadastrada para esse tipo.");
+
+            usuarioChavesPix.ForEach(x =>
+            {
+                var chavesPix = _context.chavePix.Where(y => y.id == x.idChavePix && y.tipoChavePix == tipoChavePix).FirstOrDefault();
+                if (chavesPix != null) 
+                {
+                    _context.usuarioChavePix.Remove(x);
+                    _context.SaveChanges();
+
+                    _context.chavePix.Remove(chavesPix);
+                    _context.SaveChanges();
+                } 
+            });
         }
 
         public void ValidaChavePix(SalvarChavePixFilter salvarChavePixFilter)

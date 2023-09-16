@@ -1,4 +1,5 @@
 ﻿using APIPix.Entity.Enums;
+using APIPix.Repository.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

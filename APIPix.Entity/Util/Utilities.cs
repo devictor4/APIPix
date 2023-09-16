@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -143,6 +144,7 @@ namespace APIPix.Entity.Util
             return cnpj.EndsWith(digito);
         }
 
+        //Conferência básica pra Email
         public static bool EmailValidado(string email)
         {
             var emailValidado = false;
@@ -151,11 +153,41 @@ namespace APIPix.Entity.Util
             return emailValidado;
         }
 
+        //Remover todos os caracteres que não forem numerais
         public static string OnlyNumbers(string input)
         {
             var OnlyNumbers = Regex.Replace(input, @"[^\d]", String.Empty);
 
             return OnlyNumbers;
+        }
+
+        //Capturar a descrição de um Enum
+        public class DescriptionEnum
+        {
+            public static string GetEnumDescription(Enum value)
+            {
+                var fi = value.GetType().GetField(value.ToString());
+
+
+
+                var attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+
+
+                return attributes.Length > 0 ? attributes[0].Description : value.ToString();
+            }
+            public static string Description(Enum enumValue)
+            {
+                var descriptionAttribute = enumValue.GetType()
+                    .GetField(enumValue.ToString())
+                    .GetCustomAttributes(false)
+                    .SingleOrDefault(attr => attr.GetType() == typeof(DescriptionAttribute)) as DescriptionAttribute;
+
+
+
+                // return description
+                return descriptionAttribute?.Description ?? "";
+            }
         }
     }
 }
