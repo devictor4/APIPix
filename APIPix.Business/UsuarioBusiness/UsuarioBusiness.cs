@@ -22,7 +22,7 @@ namespace APIPix.Business.UsuarioBusiness
 
             var result = _context.usuario.Where(x => x.cpfCnpj == cpfCnpj).FirstOrDefault();
 
-            if(result == null) throw new Exception("Usuário não encontrado.");
+            if (result == null) throw new Exception("Usuário não encontrado.");
             if (result.stExclusao) throw new Exception("O usuário informado encontra-se desligado.");
 
             UsuarioDTO usuarioDTO = new UsuarioDTO(result);

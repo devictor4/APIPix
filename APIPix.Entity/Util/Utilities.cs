@@ -148,8 +148,14 @@ namespace APIPix.Entity.Util
             var emailValidado = false;
             if (email.Contains("@")) emailValidado = true;
 
-
             return emailValidado;
+        }
+
+        public static string OnlyNumbers(string input)
+        {
+            var OnlyNumbers = Regex.Replace(input, @"[^\d]", String.Empty);
+
+            return OnlyNumbers;
         }
     }
 }
